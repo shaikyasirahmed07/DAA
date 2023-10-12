@@ -1,0 +1,140 @@
+DAA WEEK -6;
+IN-LAB:
+1)#include <stdio.h>
+#include <stdlib.h>
+
+int maxThievesCaptured(char arr[], int n, int k) {
+    int maxThieves = 0;
+    int lastPolice = -1; 
+    
+    for (int i = 0; i < n; i++) {
+        if (arr[i] == 'P') {
+            lastPolice = i;
+        } else if (arr[i] == 'T' && lastPolice != -1 && i - lastPolice <= k) {
+            maxThieves++;
+            lastPolice = -1; 
+        }
+    }
+    
+    return maxThieves;
+}
+
+int main() {
+    int n, k;
+    printf("Enter the size of the array: ");
+    scanf("%d", &n);
+    char arr[n];
+    
+    printf("Enter the elements of the array (P for police, T for thief): ");
+    for (int i = 0; i < n; i++) {
+        scanf(" %c", &arr[i]);
+    }
+    
+    printf("Enter the value of k: ");
+    scanf("%d", &k);
+    
+    int result = maxThievesCaptured(arr, n, k);
+    
+    printf("Maximum number of thieves captured: %d\n", result);
+    
+    return 0;
+}
+OUTPUT:2
+---------------------------------------------------------------------------------------------
+2)#include <stdio.h>
+
+int maxArea(int height[], int n) {
+    int left = 0;
+    int right = n - 1;
+    int maxArea = 0;
+
+    while (left < right) {
+        int currentArea = (right - left) * (height[left] < height[right] ? height[left] : height[right]);
+        if (currentArea > maxArea)
+            maxArea = currentArea;
+
+        if (height[left] < height[right])
+            left++;
+        else
+            right--;
+    }
+
+    return maxArea;
+}
+
+int main() {
+    int height[] = {1, 8, 6, 2, 5, 4, 8, 3, 7};
+    int n = sizeof(height) / sizeof(height[0]);
+
+    int maxAreaValue = maxArea(height, n);
+    printf("%d\n", maxAreaValue);
+
+    return 0;
+}
+OUTPUT:49
+------------------------------------------------------------------------------
+
+POST LAB:
+1)#include <stdio.h>
+#include <stdlib.h>
+struct Job {
+    char id;
+    int deadline;
+    int profit;
+};
+int compareJobs(const void* a, const void* b) {
+    return ((struct Job*)b)->profit - ((struct Job*)a)->profit;
+}
+void findMaxProfit(struct Job jobs[], int n) {
+    qsort(jobs, n, sizeof(struct Job), compareJobs); 
+    int maxDeadline = 0;
+    for (int i = 0; i < n; i++) {
+        if (jobs[i].deadline > maxDeadline)
+            maxDeadline = jobs[i].deadline;
+    }
+    char sequence[maxDeadline];
+    for (int i = 0; i < maxDeadline; i++)
+        sequence[i] = 0;
+    int filledSlots = 0; 
+    int totalProfit = 0; 
+    for (int i = 0; i < n; i++) {
+        int deadline = jobs[i].deadline;
+        while (deadline > 0) {
+            if (sequence[deadline - 1] == 0) {
+                sequence[deadline - 1] = jobs[i].id;
+                filledSlots++;
+                totalProfit += jobs[i].profit;
+                break;
+            }
+            deadline--;
+        }
+        if (filledSlots == maxDeadline)
+            break;
+    }
+
+    printf("Total Profit: %d\n", totalProfit);
+    printf("Profit Sequence of Jobs: ");
+    for (int i = 0; i < maxDeadline; i++) {
+        if (sequence[i] != 0)
+            printf("%c ", sequence[i]);
+    }
+    printf("\n");
+}
+
+int main() {
+    int n;
+    printf("Enter the number of jobs: ");
+    scanf("%d", &n);
+
+    struct Job jobs[n];
+    for (int i = 0; i < n; i++) {
+        printf("Enter job ID, deadline, and profit for job %d: ", i + 1);
+        scanf(" %c %d %d", &jobs[i].id, &jobs[i].deadline, &jobs[i].profit);
+    }
+
+    findMaxProfit(jobs, n);
+
+    return 0;
+}
+OUTPUT:60
+---------------------------------------------------------------------------------------------
